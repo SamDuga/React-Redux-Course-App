@@ -11,7 +11,7 @@ interface SelectInputProps {
 }
 
 export default function SelectInput( props: SelectInputProps ) {
-    let wrapperClass = ( props.error && props.error.length > 0 ) ? 'form-group has-error' : 'form-group';
+    const wrapperClass = ( props.error && props.error.length > 0 ) ? 'form-group has-error' : 'form-group';
     return (
         <div className={wrapperClass}>
             <label htmlFor={props.id}>{props.label}</label>

@@ -7,38 +7,38 @@ export interface AuthorAction extends Action {
     authors?: Array<AuthorData>;
 }
 
-export function loadAuthorsSuccess(authors: Array<AuthorData>): AuthorAction {
-    return {type: actionTypes.LOAD_AUTHORS_SUCCESS, authors};
+export function loadAuthorsSuccess( authors: Array<AuthorData> ): AuthorAction {
+    return { type: actionTypes.LOAD_AUTHORS_SUCCESS, authors };
 }
 
-export function createAuthorSuccess(author: AuthorData): AuthorAction {
-    return {type: actionTypes.CREATE_AUTHOR_SUCCESS, author};
+export function createAuthorSuccess( author: AuthorData ): AuthorAction {
+    return { type: actionTypes.CREATE_AUTHOR_SUCCESS, author };
 }
 
-export function updateAuthorSuccess(author: AuthorData): AuthorAction {
-    return {type: actionTypes.UPDATE_AUTHOR_SUCCESS, author};
+export function updateAuthorSuccess( author: AuthorData ): AuthorAction {
+    return { type: actionTypes.UPDATE_AUTHOR_SUCCESS, author };
 }
 
 export function loadAuthors() {
-    return function (dispatch) {
+    return function ( dispatch ) {
         return authorApi.getAuthors()
-            .then(courses => {
-                dispatch(loadAuthorsSuccess(courses))
-            })
-            .catch(err => {
+            .then( courses => {
+                dispatch( loadAuthorsSuccess( courses ) );
+            } )
+            .catch( err => {
                 throw err;
-            })
-    }
+            } );
+    };
 }
 
-export function saveAuthor(author: AuthorData) {
-    return function(dispatch, getState) {
-        return authorApi.saveAuthor(author)
-            .then(savedAuthor => {
+export function saveAuthor( author: AuthorData ) {
+    return function ( dispatch, getState ) {
+        return authorApi.saveAuthor( author )
+            .then( savedAuthor => {
                 author.id
-                    ? dispatch(updateAuthorSuccess(savedAuthor))
-                    : dispatch(createAuthorSuccess(savedAuthor));
-            })
-            .catch(error => {throw error});
-    }
+                    ? dispatch( updateAuthorSuccess( savedAuthor ) )
+                    : dispatch( createAuthorSuccess( savedAuthor ) );
+            } )
+            .catch( error => { throw error; } );
+    };
 }

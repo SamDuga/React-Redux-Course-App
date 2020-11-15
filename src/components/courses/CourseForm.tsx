@@ -13,7 +13,7 @@ interface CourseFormProps {
 
 export default function CourseForm( props: CourseFormProps ) {
     const values: Array<{ key: string, value: string; }> = [];
-    for ( let author of props.authors ) {
+    for ( const author of props.authors ) {
         values.push( { key: author.id.toString(), value: author.name } );
     }
 

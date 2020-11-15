@@ -10,7 +10,7 @@ interface TextInputProps {
 }
 
 export default function TextInput( props: TextInputProps ) {
-    let wrapper = ( props.error && props.error.length > 0 ) ? 'form-group has-error' : 'form-group';
+    const wrapper = ( props.error && props.error.length > 0 ) ? 'form-group has-error' : 'form-group';
 
     return (
         <div className={wrapper}>

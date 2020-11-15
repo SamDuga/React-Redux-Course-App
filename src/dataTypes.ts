@@ -17,9 +17,9 @@ export const EmptyCourse: CourseData = {
     slug: '',
     authorId: 0,
     category: ''
-}
+};
 
 export const EmptyAuthor: AuthorData = {
     id: 0,
     name: ''
-}
+};

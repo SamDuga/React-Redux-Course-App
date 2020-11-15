@@ -34,7 +34,7 @@ function ManageCoursePage( props ) {
     }
 
     function formIsValid(): boolean {
-        let _errors: any = {};
+        const _errors: any = {};
 
         if ( !course.title ) _errors.title = 'Title is required!';
         if ( !course.authorId ) _errors.authorId = 'Author is required!';
