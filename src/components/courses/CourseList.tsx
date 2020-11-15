@@ -6,7 +6,7 @@ import { AuthorData, CourseData } from '../../dataTypes';
 interface CourseListProps {
     courses: CourseData[];
     authors: AuthorData[];
-    deleteCourse( id: number ): Promise<any>;
+    deleteCourse( course: CourseData );
 }
 
 export default function CourseList( props: CourseListProps ) {
@@ -15,10 +15,10 @@ export default function CourseList( props: CourseListProps ) {
             <thead>
                 <tr>
                     <th>Title</th>
-                    <th></th>
+                    <th />
                     <th>Author</th>
                     <th>Category</th>
-                    <th>Delete Course</th>
+                    <th />
                 </tr>
             </thead>
             <tbody>
@@ -27,11 +27,11 @@ export default function CourseList( props: CourseListProps ) {
                     return (
                         <tr key={course.id}>
                             <td><Link to={'/course/' + course.slug}>{course.title}</Link></td>
-                            <td><a className='btn btn-light' href={'https://pluralsight.com/courses/' + course.slug}>Watch</a></td>
+                            <td><a className='btn btn-outline-info' href={'https://pluralsight.com/courses/' + course.slug}>Watch</a></td>
                             <td>{author?.name}</td>
                             <td>{course.category}</td>
                             <td>
-                                <button onClick={() => props.deleteCourse( course.id )} className='btn btn-outline-danger'>Delete</button>
+                                <button onClick={() => props.deleteCourse( course )} className='btn btn-outline-danger'>Delete</button>
                             </td>
                         </tr> );
                 } )}

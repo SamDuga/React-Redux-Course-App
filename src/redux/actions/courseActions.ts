@@ -1,6 +1,5 @@
 import * as courseApi from '../../api/courseApi';
 import { CourseData } from '../../dataTypes';
-import apiCallStatusReducer from '../reducers/apiCallStatusReducer';
 import { Action, actionTypes } from './actionTypes';
 import { apiCallError, beginApiCall } from './apiStatusActions';
 
@@ -19,6 +18,10 @@ export function createCourseSuccess( courses: Array<CourseData> ): CourseAction 
 
 export function updateCourseSuccess( courses: Array<CourseData> ): CourseAction {
     return { type: actionTypes.UPDATE_COURSE_SUCCESS, courses };
+}
+
+export function deleteCourseOptimistic( course: CourseData ): CourseAction {
+    return { type: actionTypes.DELETE_COURSE_OPTIMISTIC, course };
 }
 
 export function loadCourses() {
@@ -48,5 +51,12 @@ export function saveCourse( course: CourseData ) {
                 dispatch( apiCallError() );
                 throw error;
             } );
+    };
+}
+
+export function deleteCourse( course: CourseData ) {
+    return function ( dispatch ) {
+        dispatch( deleteCourseOptimistic( course ) );
+        return courseApi.deleteCourse( course.id );
     };
 }

@@ -27,10 +27,11 @@ function ManageCoursePage( props ) {
     }
 
     function handleSubmit( event: React.FormEvent ) {
-        setSaving( true );
         event.preventDefault();
 
         if ( !formIsValid() ) return;
+
+        setSaving( true );
 
         props.actions.saveCourse( course )
             .then( () => {

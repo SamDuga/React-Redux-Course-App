@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AppState } from '../../redux/appState';
+import { toast } from 'react-toastify';
 
 import { AuthorData, CourseData } from '../../dataTypes';
 import * as courseActions from '../../redux/actions/courseActions';
@@ -24,8 +25,13 @@ function CoursesPage( props: CoursesPageProps ) {
         if ( props.authors.length === 0 ) props.actions.loadAuthors().catch( err => alert( 'loading authors failed' ) );
     }, [ props.courses.length, props.authors.length, props.actions ] );
 
-    function deleteCourse( id: number ): Promise<any> {
-        return props.actions.deleteCourse( id );
+    async function deleteCourse( course: CourseData ) {
+        toast.success( `${course.title} deleted sucessfully!` );
+        try {
+            await props.actions.deleteCourse( course );
+        } catch ( err ) {
+            toast.error( `Delete failed: ${err.message}`, { autoClose: false } );
+        }
     }
 
     return (
