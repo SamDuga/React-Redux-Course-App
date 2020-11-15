@@ -4,6 +4,7 @@ export interface CourseData {
     slug: string;
     authorId: number;
     category: string;
+    onSave?: string;
 }
 
 export interface AuthorData {

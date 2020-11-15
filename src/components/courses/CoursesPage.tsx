@@ -8,11 +8,13 @@ import * as courseActions from '../../redux/actions/courseActions';
 import * as authorActions from '../../redux/actions/authorActions';
 import CourseList from './CourseList';
 import { Link } from 'react-router-dom';
+import LoadSpinner from '../common/LoadSpinner';
 
 interface CoursesPageProps {
     actions;
     courses: Array<CourseData>;
     authors: Array<AuthorData>;
+    loading: boolean;
 }
 
 function CoursesPage( props: CoursesPageProps ) {
@@ -29,13 +31,19 @@ function CoursesPage( props: CoursesPageProps ) {
     return (
         <>
             <h2>Courses</h2>
-            <CourseList courses={props.courses} authors={props.authors} deleteCourse={deleteCourse} />
-            <Link to='/course/' className='btn btn-primary' >Add Course</Link>
+            {props.loading
+                ? <LoadSpinner />
+                : <>
+                    <CourseList courses={props.courses} authors={props.authors} deleteCourse={deleteCourse} />
+                    <Link to='/course/' className='btn btn-primary' >Add Course</Link>
+                </>
+            }
+
         </> );
 }
 
 function mapStateToProps( state: AppState, ownProps ) {
-    return { courses: state.courses, authors: state.authors };
+    return { courses: state.courses, authors: state.authors, loading: state.apiCallsInProgress > 0 };
 }
 
 function mapDispatchToProps( dispatch ) {

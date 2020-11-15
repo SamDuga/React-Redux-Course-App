@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { toast } from 'react-toastify';
+
 import * as courseActions from '../../redux/actions/courseActions';
 import * as authorActions from '../../redux/actions/authorActions';
 import { CourseData, EmptyCourse } from '../../dataTypes';
 import { AppState } from '../../redux/appState';
 import CourseForm from './CourseForm';
+import LoadSpinner from '../common/LoadSpinner';
 
 function ManageCoursePage( props ) {
     const [ course, setCourse ] = useState<CourseData>( props.course );
-    const [ errors, setErrors ] = useState<CourseData>( EmptyCourse );
+    const [ errors, setErrors ] = useState( {} );
+    const [ saving, setSaving ] = useState<boolean>( false );
 
     useEffect( () => {
         if ( props.courses.length === 0 ) props.actions.loadCourses().catch( err => alert( 'loading courses failed' ) );
@@ -23,13 +27,19 @@ function ManageCoursePage( props ) {
     }
 
     function handleSubmit( event: React.FormEvent ) {
+        setSaving( true );
         event.preventDefault();
 
         if ( !formIsValid() ) return;
 
         props.actions.saveCourse( course )
             .then( () => {
+                toast.success( 'Course saved sucessfully!' );
                 props.history.push( '/courses/' );
+            } )
+            .catch( err => {
+                setSaving( false );
+                setErrors( { onSave: err.message } );
             } );
     }
 
@@ -46,7 +56,11 @@ function ManageCoursePage( props ) {
 
     return (
         <>
-            <CourseForm course={course} authors={props.authors} errors={errors} handleSubmit={handleSubmit} handleChange={handleChange} />
+            {props.authors.length === 0 || props.courses.length === 0
+                ? <LoadSpinner />
+                : <CourseForm saving={saving} course={course} authors={props.authors} errors={errors} handleSubmit={handleSubmit} handleChange={handleChange} />
+            }
+
         </>
     );
 }
@@ -58,7 +72,7 @@ function getCourseBySlug( courses: Array<CourseData>, slug: string ) {
 function mapStateToProps( state: AppState, ownProps ) {
     const slug = ownProps.match.params.slug;
     const course = slug && state.courses.length > 0 ? getCourseBySlug( state.courses, slug ) : EmptyCourse;
-    return { courses: state.courses, authors: state.authors, course };
+    return { courses: state.courses, authors: state.authors, course, saving: state.apiCallsInProgress > 0 };
 }
 
 function mapDispatchToProps( dispatch ) {

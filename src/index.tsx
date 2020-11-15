@@ -14,7 +14,8 @@ import { AppState } from './redux/appState';
 // eslint-disable-next-line prefer-const
 let initalState: AppState = {
     courses: [],
-    authors: []
+    authors: [],
+    apiCallsInProgress: 0
 };
 
 const store = configureStore( initalState );

@@ -1,6 +1,8 @@
 import * as courseApi from '../../api/courseApi';
 import { CourseData } from '../../dataTypes';
+import apiCallStatusReducer from '../reducers/apiCallStatusReducer';
 import { Action, actionTypes } from './actionTypes';
+import { apiCallError, beginApiCall } from './apiStatusActions';
 
 export interface CourseAction extends Action {
     course?: CourseData;
@@ -21,11 +23,13 @@ export function updateCourseSuccess( courses: Array<CourseData> ): CourseAction 
 
 export function loadCourses() {
     return function ( dispatch ) {
+        dispatch( beginApiCall() );
         return courseApi.getCourses()
             .then( courses => {
                 dispatch( loadCoursesSuccess( courses ) );
             } )
             .catch( err => {
+                dispatch( apiCallError() );
                 throw err;
             } );
     };
@@ -33,12 +37,16 @@ export function loadCourses() {
 
 export function saveCourse( course: CourseData ) {
     return function ( dispatch, getState ) {
+        dispatch( beginApiCall() );
         return courseApi.saveCourse( course )
             .then( savedCourse => {
                 course.id
                     ? dispatch( updateCourseSuccess( savedCourse ) )
                     : dispatch( createCourseSuccess( savedCourse ) );
             } )
-            .catch( error => { throw error; } );
+            .catch( error => {
+                dispatch( apiCallError() );
+                throw error;
+            } );
     };
 }

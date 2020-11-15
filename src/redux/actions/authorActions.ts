@@ -1,6 +1,7 @@
 import * as authorApi from '../../api/authorApi';
 import { AuthorData } from '../../dataTypes';
 import { Action, actionTypes } from './actionTypes';
+import { apiCallError, beginApiCall } from './apiStatusActions';
 
 export interface AuthorAction extends Action {
     author?: AuthorData;
@@ -21,11 +22,13 @@ export function updateAuthorSuccess( author: AuthorData ): AuthorAction {
 
 export function loadAuthors() {
     return function ( dispatch ) {
+        dispatch( beginApiCall() );
         return authorApi.getAuthors()
             .then( courses => {
                 dispatch( loadAuthorsSuccess( courses ) );
             } )
             .catch( err => {
+                dispatch( apiCallError() );
                 throw err;
             } );
     };
@@ -33,12 +36,16 @@ export function loadAuthors() {
 
 export function saveAuthor( author: AuthorData ) {
     return function ( dispatch, getState ) {
+        dispatch( beginApiCall() );
         return authorApi.saveAuthor( author )
             .then( savedAuthor => {
                 author.id
                     ? dispatch( updateAuthorSuccess( savedAuthor ) )
                     : dispatch( createAuthorSuccess( savedAuthor ) );
             } )
-            .catch( error => { throw error; } );
+            .catch( error => {
+                dispatch( apiCallError() );
+                throw error;
+            } );
     };
 }
